@@ -1,0 +1,84 @@
+services:
+  # 前端服务 - Nginx (自动构建)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # 后端服务 - Go API (SQLite模式，默认)
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DB_TYPE=sqlite
+      - DB_PATH=/app/data/host_manager.db
+      - GIN_MODE=release
+    restart: unless-stopped
+
+  # 前端服务 - MySQL模式
+  frontend-mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-mysql
+    restart: unless-stopped
+    profiles:
+      - mysql
+
+  # 后端服务 - MySQL模式
+  backend-mysql:
+    build: 
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_TYPE=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=host_manager
+      - GIN_MODE=release
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    profiles:
+      - mysql
+
+  # MySQL数据库服务
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=host_manager
+      - MYSQL_CHARSET=utf8mb4
+      - MYSQL_COLLATION=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    profiles:
+      - mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  mysql_data: 
