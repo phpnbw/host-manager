@@ -34,10 +34,18 @@ read -p "请输入选择 (1 或 2，默认为 1): " choice
 case $choice in
     2)
         echo "🐬 启动 MySQL 模式..."
+        echo "🧹 正在清理旧容器和数据卷..."
+        docker compose down -v
+        docker rmi host-manager-frontend host-manager-backend
+        docker compose build --no-cache
         docker compose --profile mysql up -d
         ;;
     *)
         echo "🗃️ 启动 SQLite 模式..."
+        echo "🧹 正在清理旧容器和数据卷..."
+        docker compose down -v
+        docker rmi host-manager-frontend host-manager-backend
+        docker compose build --no-cache
         docker compose up -d
         ;;
 esac

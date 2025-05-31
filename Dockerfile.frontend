@@ -16,6 +16,10 @@ RUN npm install
 # 复制源代码
 COPY frontend/ .
 
+# 添加构建参数支持
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
+
 # 构建前端
 RUN npm run build
 
