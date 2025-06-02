@@ -5,6 +5,7 @@ import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import { SerializeAddon } from '@xterm/addon-serialize'
 import type { Host } from '@/types/host'
+import { API_CONFIG } from '@/config/api'
 
 export interface TerminalInstance {
   id: string
@@ -77,7 +78,7 @@ export const useTerminalStore = defineStore('terminal', () => {
   // 连接WebSocket
   const connectWebSocket = async (terminalInstance: TerminalInstance) => {
     const token = localStorage.getItem('token')
-    const wsUrl = `ws://localhost:8080/api/terminal/${terminalInstance.hostId}?token=${token}`
+    const wsUrl = `${API_CONFIG.wsBaseURL}/terminal/${terminalInstance.hostId}?token=${token}`
     
     terminalInstance.websocket = new WebSocket(wsUrl)
 
