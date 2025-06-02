@@ -16,7 +16,7 @@ func SetupRoutes() *gin.Engine {
 	if gin.Mode() == gin.ReleaseMode {
 		config.AllowOrigins = []string{"*"} // 生产环境允许所有来源
 	} else {
-		config.AllowOrigins = []string{"http://localhost:5173"} // 开发环境
+		config.AllowOrigins = []string{"http://localhost:5173", "http://127.0.0.1:5173"} // 开发环境
 	}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
