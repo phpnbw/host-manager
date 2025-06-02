@@ -5,8 +5,8 @@ export const API_CONFIG = {
     baseURL: '/api',
 
     // WebSocket 配置
-    // 开发环境：直连后端
-    // 生产环境：通过 Nginx 代理
+    // 开发环境：通过 Vite 代理到后端
+    // 生产环境：通过 Nginx 代理到后端
     wsBaseURL: `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api`,
 
     // 超时配置

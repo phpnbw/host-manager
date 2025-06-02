@@ -80,9 +80,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { Monitor, Menu, User, ArrowDown, SwitchButton, Document } from '@element-plus/icons-vue'
 import { useAuthStore } from '../stores/auth'
 
+const router = useRouter()
 const isMobile = ref(false)
 const showSidebar = ref(false)
 const authStore = useAuthStore()
@@ -108,6 +110,7 @@ const toggleSidebar = () => {
 const handleCommand = (command: string) => {
   if (command === 'logout') {
     authStore.logout()
+    router.push('/login')
   }
 }
 
